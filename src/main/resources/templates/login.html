@@ -1,0 +1,65 @@
+<!DOCTYPE html> 
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión</title>
+  <link href="https://fonts.googleapis.com/css?family=Instrument+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-form">
+      <form id="formLogin" method="post" th:action="@{/login}">
+        <div class="v261_249"></div>
+
+        <h2 class="v211_207">Inicia sesión en tu cuenta</h2>
+        <p class="v211_211">
+          ¿Aún no eres miembro?
+          <a th:href="@{/registro}" class="registrate-link">Regístrate</a>
+        </p>
+
+        <!-- 🔹 CAMPO DE CORREO -->
+        <label for="correo" class="v211_213">Dirección de correo electrónico</label>
+        <input id="correo" type="email" placeholder="Correo electrónico" 
+               name="username" class="input-campo"
+               th:value="${param.username}" required>
+        <div id="error-correo" class="error-msg"
+             th:if="${param.error}" th:text="'Correo o contraseña son incorrectos.'"></div>
+
+        <!-- 🔹 CAMPO DE CONTRASEÑA -->
+        <label for="clave" class="v211_215">Contraseña</label>
+        <input id="clave" type="password" placeholder="Contraseña" 
+               name="password" class="input-campo" required>
+        <div id="error-clave" class="error-msg"
+             th:if="${param.error}" th:text="'Correo o contraseña son incorrectos.'"></div>
+
+        <div class="checkbox-container">
+          <label>
+            <input type="checkbox" class="checkbox-custom">
+            <span class="checkmark"></span>
+            <span class="v211_220">Recuérdame</span>
+          </label>
+          <a href="#" class="v211_226">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="btn-iniciar-sesion">Iniciar sesión</button>
+
+        <div class="linea-contenedor">
+          <div class="linea"></div>
+          <span class="linea-texto">O continuar con</span>
+          <div class="linea"></div>
+        </div>
+
+        <a href="https://accounts.google.com/" target="_blank" class="google-wrapper">
+          <div class="google-icon"></div>
+          <span>Google</span>
+        </a>
+      </form>
+    </div>
+
+    <div class="right-image"></div>
+  </div>
+</body>
+</html>

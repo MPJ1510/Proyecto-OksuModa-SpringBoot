@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+    <div class="sidebar" th:fragment="sidebar">
+        <a class="v290_388"></a>
+        <h2>Panel de Control</h2>
+
+        <!-- 🏠 INICIO -->
+        <a th:href="@{/admin/dashboard}" class="sidebar-link">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+
+        <!-- 👥 GESTIÓN DE USUARIOS -->
+        <a th:href="@{/admin/dashboard(view='usuarios')}" class="sidebar-link">
+            <i class="bi bi-people-fill"></i> Usuarios
+        </a>
+
+        <!-- 📦 GESTIÓN DE PRODUCTOS -->
+        <a th:href="@{/admin/dashboard(view='productos')}" class="sidebar-link">
+            <i class="bi bi-box-seam"></i> Productos
+        </a>
+
+        <!-- 🏷️ GESTIÓN DE CATEGORÍAS -->
+        <a th:href="@{/admin/dashboard(view='categorias')}" class="sidebar-link">
+            <i class="bi bi-tags-fill"></i> Categorías
+        </a>
+
+        <!-- 👤 GESTIÓN DE CLIENTES -->
+        <a th:href="@{/admin/dashboard(view='clientes')}" class="sidebar-link">
+            <i class="bi bi-person-badge-fill"></i> Clientes
+        </a>
+
+        <!-- 💰 GESTIÓN DE VENTAS -->
+        <a th:href="@{/admin/dashboard(view='ventas')}" class="sidebar-link">
+            <i class="bi bi-cart-check-fill"></i> Ventas
+        </a>
+
+        <!-- 📊 REPORTES -->
+        <a th:href="@{/admin/dashboard(view='reportes')}" class="sidebar-link">
+            <i class="bi bi-graph-up"></i> Reportes
+        </a>
+
+        <!-- 🏠 VOLVER AL INICIO -->
+        <div class="sidebar-bottom-link">
+            <a th:href="@{/}" title="Volver a Inicio">
+                <i class="bi bi-house-door-fill"></i>
+            </a>
+        </div>
+    </div>
+
+    <div th:replace="~{admin/dashboard :: sidebar}"></div>
+
+    <div class="main">
+
+        <!-- ========== VISTA DE RESUMEN ========== -->
+        <div th:if="${currentView == 'summary' or currentView == null}" class="summary-view">
+            <h1>Bienvenido al Panel de Administración</h1>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Total Usuarios</h3>
+                    <p th:text="${totalUsuarios != null ? totalUsuarios : '0'}">0</p>
+                </div>
+                <div class="card">
+                    <h3>Productos Activos</h3>
+                    <p th:text="${productosActivos != null ? productosActivos : '0'}">0</p>
+                </div>
+                <div class="card">
+                    <h3>Ventas del Día</h3>
+                    <p th:text="${ventasHoy != null ? ventasHoy : '$0'}">$0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== VISTA DE PRODUCTOS CON FILTROS ========== -->
+        <div th:if="${currentView == 'productos'}" class="list-view">
+            <h1> Gestión de Productos</h1>
+
+            <!-- FILTROS DE BÚSQUEDA -->
+            <form method="get" th:action="@{/admin/dashboard}" class="filtros-productos-form">
+                <input type="hidden" name="view" value="productos">
+
+                <div class="filtros-grid-productos">
+                    <!-- Card 1: Filtro por Nombre -->
+                    <div class="filtro-card filtro-nombre">
+                        <div class="filtro-header">
+                            <i class="bi bi-box-seam"></i> Nombre
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="text" name="nombre" id="filtro-producto-nombre" class="form-control"
+                                    th:value="${filtroNombre}" placeholder="Buscar producto...">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-producto-nombre').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Filtro por Estado -->
+                    <div class="filtro-card filtro-estado">
+                        <div class="filtro-header">
+                            <i class="bi bi-check-circle-fill"></i> Estado
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <select name="estado" id="filtro-producto-estado" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="activo" th:selected="${filtroEstado == 'activo'}">Activo</option>
+                                    <option value="inactivo" th:selected="${filtroEstado == 'inactivo'}">Inactivo
+                                    </option>
+                                </select>
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-producto-estado').selectedIndex = 0">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Filtro por Precio Mínimo -->
+                    <div class="filtro-card filtro-precio-min">
+                        <div class="filtro-header">
+                            <i class="bi bi-currency-dollar"></i> Precio Min
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="number" name="precioMin" id="filtro-producto-precio-min"
+                                    class="form-control" th:value="${filtroPrecioMin}" placeholder="$ Desde..." min="0"
+                                    step="0.01">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-producto-precio-min').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Filtro por Precio Máximo -->
+                    <div class="filtro-card filtro-precio-max">
+                        <div class="filtro-header">
+                            <i class="bi bi-currency-dollar"></i> Precio Max
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="number" name="precioMax" id="filtro-producto-precio-max"
+                                    class="form-control" th:value="${filtroPrecioMax}" placeholder="$ Hasta..." min="0"
+                                    step="0.01">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-producto-precio-max').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Filtro por Stock Mínimo -->
+                    <div class="filtro-card filtro-stock">
+                        <div class="filtro-header">
+                            <i class="bi bi-boxes"></i> Stock Min
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="number" name="stockMin" id="filtro-producto-stock" class="form-control"
+                                    th:value="${filtroStockMin}" placeholder="Cantidad mín..." min="0">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-producto-stock').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Acciones de Filtrado -->
+                    <div class="filtro-card filtro-acciones">
+                        <div class="filtro-header">
+                            <i class="bi bi-search"></i> Acción
+                        </div>
+                        <div class="filtro-body filtro-acciones-body">
+                            <button type="submit" class="btn-filtrar">
+                                 Filtrar
+                            </button>
+                            <a th:href="@{/admin/dashboard(view='productos')}" class="btn-limpiar-todo">
+                                 Limpiar Todo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- BOTONES DE ACCIÓN Y CONTADOR -->
+            <div class="acciones-header">
+                <div class="acciones-left">
+                    <a th:href="@{/admin/dashboard(view='new_producto')}" class="btn-nuevo">
+                        ➕ Crear Nuevo Producto
+                    </a>
+
+                    <!-- Botón para generar PDF con filtros actuales -->
+                    <a th:href="@{/admin/reportes/productos(
+                    nombre=${filtroNombre},
+                    estado=${filtroEstado},
+                    precioMin=${filtroPrecioMin},
+                    precioMax=${filtroPrecioMax},
+                    stockMin=${filtroStockMin}
+                )}" target="_blank" class="btn-success">
+                        📄 Descargar PDF
+                    </a>
+                </div>
+
+                <div class="contador-resultados">
+                    <span class="contador-label">Productos encontrados:</span>
+                    <span class="contador-badge" th:text="${productos.size()}">0</span>
+                </div>
+            </div>
+
+            <!-- TABLA DE PRODUCTOS -->
+            <div class="table-container">
+                <table class="crud-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Foto</th>
+                            <th>Estado</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${productos == null or #lists.isEmpty(productos)}">
+                            <td colspan="8" class="tabla-vacia">
+                                <i class="bi bi-inbox" style="font-size: 48px; color: #9ca3af;"></i>
+                                <p>No se encontraron productos con los filtros aplicados</p>
+                            </td>
+                        </tr>
+                        <tr th:each="producto : ${productos}">
+                            <td th:text="${producto.id}">1</td>
+                            <td th:text="${producto.nombre}">Camiseta Oksu</td>
+                            <td th:text="${producto.descripcion}">Descripción completa del producto</td>
+                            <td>
+                                <img th:src="${producto.foto}" alt="Foto"
+                                    style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;">
+                            </td>
+                            <td>
+                                <span class="badge-estado"
+                                    th:classappend="${producto.estado == 'activo'} ? 'badge-activo' : 'badge-inactivo'"
+                                    th:text="${producto.estado}">
+                                    activo
+                                </span>
+                            </td>
+                            <td>
+                                <span class="precio-producto"
+                                    th:text="${#numbers.formatCurrency(producto.precio)}">$50,000</span>
+                            </td>
+                            <td>
+                                <span class="stock-badge"
+                                    th:classappend="${producto.stock > 10} ? 'stock-alto' : (${producto.stock > 0} ? 'stock-medio' : 'stock-bajo')"
+                                    th:text="${producto.stock}">
+                                    150
+                                </span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/dashboard(view='edit_producto', id=${producto.id})}"
+                                    class="btn-accion btn-editar"> Editar</a>
+                                <a th:href="@{/admin/productos/eliminar/{id}(id=${producto.id})}"
+                                    class="btn-accion btn-eliminar"
+                                    onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">
+                                    Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== FORMULARIO DE PRODUCTO ========== -->
+        <div th:if="${currentView == 'new_producto' or currentView == 'edit_producto'}" class="form-view">
+            <div th:replace="~{admin/productos/form :: productForm}"></div>
+        </div>
+
+        <!-- ========== VISTA DE USUARIOS CON FILTROS ========== -->
+        <div th:if="${currentView == 'usuarios'}" class="usuarios-list-view">
+            <h1> Gestión de Usuarios</h1>
+
+            <!-- FILTROS DE BÚSQUEDA -->
+            <form method="get" th:action="@{/admin/dashboard}" class="filtros-usuarios-form">
+                <input type="hidden" name="view" value="usuarios">
+
+                <div class="filtros-grid">
+                    <!-- Card 1: Filtro por Nombre -->
+                    <div class="filtro-card filtro-nombre">
+                        <div class="filtro-header">
+                            <i class="bi bi-person-fill"></i> Nombre
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="text" name="nombre" id="filtro-usuario-nombre" class="form-control"
+                                    th:value="${filtroNombre}" placeholder="Buscar por nombre...">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-usuario-nombre').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Filtro por Email -->
+                    <div class="filtro-card filtro-email">
+                        <div class="filtro-header">
+                            <i class="bi bi-envelope-fill"></i> Email
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="text" name="email" id="filtro-usuario-email" class="form-control"
+                                    th:value="${filtroEmail}" placeholder="Buscar por email...">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-usuario-email').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Filtro por Rol -->
+                    <div class="filtro-card filtro-rol">
+                        <div class="filtro-header">
+                            <i class="bi bi-shield-fill"></i> Rol
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <select name="rolNombre" id="filtro-usuario-rol" class="form-control">
+                                    <option value="">Todos los roles</option>
+                                    <option value="Administrador" th:selected="${filtroRolNombre == 'Administrador'}">
+                                        Administrador</option>
+                                    <option value="Cliente" th:selected="${filtroRolNombre == 'Cliente'}">Cliente
+                                    </option>
+                                </select>
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-usuario-rol').selectedIndex = 0">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Filtro por Estado -->
+                    <div class="filtro-card filtro-estado">
+                        <div class="filtro-header">
+                            <i class="bi bi-check-circle-fill"></i> Estado
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <select name="estado" id="filtro-usuario-estado" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="activo" th:selected="${filtroEstado == 'activo'}">Activo</option>
+                                    <option value="inactivo" th:selected="${filtroEstado == 'inactivo'}">Inactivo
+                                    </option>
+                                </select>
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-usuario-estado').selectedIndex = 0">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Acciones de Filtrado -->
+                    <div class="filtro-card filtro-acciones">
+                        <div class="filtro-header">
+                            <i class="bi bi-search"></i> Acción
+                        </div>
+                        <div class="filtro-body filtro-acciones-body">
+                            <button type="submit" class="btn-filtrar">
+                                Filtrar
+                            </button>
+                            <a th:href="@{/admin/dashboard(view='usuarios')}" class="btn-limpiar-todo">
+                                Limpiar Todo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- BOTONES DE ACCIÓN Y CONTADOR -->
+            <div class="acciones-header">
+                <div class="acciones-left">
+                    <a th:href="@{/admin/dashboard(view='new_usuario')}" class="btn-nuevo">
+                        ➕ Crear Nuevo Usuario
+                    </a>
+
+                    <!-- Botón para generar PDF con filtros actuales -->
+                    <a th:href="@{/admin/reportes/usuarios(
+                    nombre=${filtroNombre},
+                    email=${filtroEmail},
+                    rolNombre=${filtroRolNombre},
+                    estado=${filtroEstado}
+                )}" target="_blank" class="btn-success">
+                        📄 Descargar PDF
+                    </a>
+                </div>
+
+                <div class="contador-resultados">
+                    <span class="contador-label">Usuarios encontrados:</span>
+                    <span class="contador-badge" th:text="${usuarios.size()}">0</span>
+                </div>
+            </div>
+
+            <!-- TABLA DE USUARIOS -->
+            <div class="table-container">
+                <table class="crud-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${usuarios == null or #lists.isEmpty(usuarios)}">
+                            <td colspan="6" class="tabla-vacia">
+                                <i class="bi bi-inbox" style="font-size: 48px; color: #9ca3af;"></i>
+                                <p>No se encontraron usuarios con los filtros aplicados</p>
+                            </td>
+                        </tr>
+                        <tr th:each="usuario : ${usuarios}">
+                            <td th:text="${usuario.idUsuario}">1</td>
+                            <td th:text="${usuario.nombre}">Admin User</td>
+                            <td th:text="${usuario.email}">user@admin.com</td>
+                            <td>
+                                <span class="badge-rol"
+                                    th:classappend="${usuario.rol.nombre == 'Administrador'} ? 'badge-admin' : 'badge-cliente'"
+                                    th:text="${usuario.rol.nombre}">
+                                    ADMIN
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge-estado"
+                                    th:classappend="${usuario.estado == 'activo'} ? 'badge-activo' : 'badge-inactivo'"
+                                    th:text="${usuario.estado}">
+                                    activo
+                                </span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/dashboard(view='edit_usuario', id=${usuario.idUsuario})}"
+                                    class="btn-accion btn-editar"> Editar</a>
+                                <a th:href="@{/admin/usuarios/eliminar/{id}(id=${usuario.idUsuario})}"
+                                    class="btn-accion btn-eliminar"
+                                    onclick="return confirm('¿Estás seguro de eliminar este usuario?');">
+                                    Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== FORMULARIO DE USUARIO ========== -->
+        <div th:if="${currentView == 'new_usuario' or currentView == 'edit_usuario'}" class="form-view">
+            <div th:replace="~{admin/usuarios/form :: usuarioForm}"></div>
+        </div>
+
+        <!-- ========== VISTA DE CATEGORÍAS CON FILTROS ========== -->
+        <div th:if="${currentView == 'categorias'}" class="list-view">
+            <h1> Gestión de Categorías</h1>
+
+            <!-- FILTROS DE BÚSQUEDA -->
+            <form method="get" th:action="@{/admin/dashboard}" class="filtros-categorias-form">
+                <input type="hidden" name="view" value="categorias">
+
+                <div class="filtros-grid-categorias">
+                    <!-- Card 1: Filtro por Nombre -->
+                    <div class="filtro-card filtro-nombre">
+                        <div class="filtro-header">
+                            <i class="bi bi-tag-fill"></i> Buscar Categoría
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="text" name="nombre" id="filtro-categoria-nombre" class="form-control"
+                                    th:value="${filtroNombre}" placeholder="Buscar por nombre...">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-categoria-nombre').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Acciones de Filtrado -->
+                    <div class="filtro-card filtro-acciones">
+                        <div class="filtro-header">
+                            <i class="bi bi-search"></i> Acción
+                        </div>
+                        <div class="filtro-body filtro-acciones-body-horizontal">
+                            <button type="submit" class="btn-filtrar">
+                                 Filtrar
+                            </button>
+                            <a th:href="@{/admin/dashboard(view='categorias')}" class="btn-limpiar-todo">
+                                 Limpiar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- BOTONES DE ACCIÓN Y CONTADOR -->
+            <div class="acciones-header">
+                <div class="acciones-left">
+                    <a th:href="@{/admin/dashboard(view='new_categoria')}" class="btn-nuevo">
+                        ➕ Crear Nueva Categoría
+                    </a>
+
+                    <!-- Botón para generar PDF con filtros actuales -->
+                    <a th:href="@{/admin/reportes/categorias(nombre=${filtroNombre})}" target="_blank"
+                        class="btn-success">
+                        📄 Descargar PDF
+                    </a>
+                </div>
+
+                <div class="contador-resultados">
+                    <span class="contador-label">Categorías encontradas:</span>
+                    <span class="contador-badge" th:text="${categorias.size()}">0</span>
+                </div>
+            </div>
+
+            <!-- TABLA DE CATEGORÍAS -->
+            <div class="table-container">
+                <table class="crud-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">ID</th>
+                            <th style="width: 50%;">Nombre</th>
+                            <th style="width: 30%;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${categorias == null or #lists.isEmpty(categorias)}">
+                            <td colspan="3" class="tabla-vacia">
+                                <i class="bi bi-inbox" style="font-size: 48px; color: #9ca3af;"></i>
+                                <p>No se encontraron categorías con los filtros aplicados</p>
+                            </td>
+                        </tr>
+                        <tr th:each="categoria : ${categorias}">
+                            <td th:text="${categoria.idCategoria}">1</td>
+                            <td>
+                                <span class="nombre-categoria">
+                                    <i class="bi bi-tag-fill" style="color: #8b5cf6;"></i>
+                                    <span th:text="${categoria.nombre}">Chaquetas</span>
+                                </span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/dashboard(view='edit_categoria', id=${categoria.idCategoria})}"
+                                    class="btn-accion btn-editar"> Editar</a>
+                                <a th:href="@{/admin/categorias/eliminar/{id}(id=${categoria.idCategoria})}"
+                                    class="btn-accion btn-eliminar"
+                                    onclick="return confirm('¿Eliminar esta categoría?');"> Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== FORMULARIO DE CATEGORÍA ========== -->
+        <div th:if="${currentView == 'new_categoria' or currentView == 'edit_categoria'}" class="form-view">
+            <div th:replace="~{admin/categorias/form :: categoriaForm}"></div>
+        </div>
+
+        <!-- ========== VISTA DE CLIENTES CON FILTROS ========== -->
+        <div th:if="${currentView == 'clientes'}" class="list-view">
+            <h1> Gestión de Clientes</h1>
+
+            <!-- FILTROS DE BÚSQUEDA -->
+            <form method="get" th:action="@{/admin/dashboard}" class="filtros-clientes-form">
+                <input type="hidden" name="view" value="clientes">
+
+                <div class="filtros-grid">
+                    <!-- Card 1: Filtro por Nombre -->
+                    <div class="filtro-card filtro-nombre">
+                        <div class="filtro-header">
+                            <i class="bi bi-person-fill"></i> Nombre
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="text" name="nombre" id="filtro-nombre" class="form-control"
+                                    th:value="${filtroNombre}" placeholder="Buscar por nombre...">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-nombre').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Filtro por Email -->
+                    <div class="filtro-card filtro-email">
+                        <div class="filtro-header">
+                            <i class="bi bi-envelope-fill"></i> Email
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="text" name="email" id="filtro-email" class="form-control"
+                                    th:value="${filtroEmail}" placeholder="Buscar por email...">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-email').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Filtro por Teléfono -->
+                    <div class="filtro-card filtro-telefono">
+                        <div class="filtro-header">
+                            <i class="bi bi-telephone-fill"></i> Teléfono
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <input type="text" name="telefono" id="filtro-telefono" class="form-control"
+                                    th:value="${filtroTelefono}" placeholder="Buscar...">
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-telefono').value = ''">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Filtro por Estado -->
+                    <div class="filtro-card filtro-estado">
+                        <div class="filtro-header">
+                            <i class="bi bi-check-circle-fill"></i> Estado
+                        </div>
+                        <div class="filtro-body">
+                            <div class="input-with-clear">
+                                <select name="estado" id="filtro-estado" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="activo" th:selected="${filtroEstado == 'activo'}">Activo</option>
+                                    <option value="inactivo" th:selected="${filtroEstado == 'inactivo'}">Inactivo
+                                    </option>
+                                </select>
+                                <button type="button" class="btn-clear" title="Limpiar"
+                                    onclick="document.getElementById('filtro-estado').selectedIndex = 0">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Acciones de Filtrado -->
+                    <div class="filtro-card filtro-acciones">
+                        <div class="filtro-header">
+                            <i class="bi bi-search"></i> Acción
+                        </div>
+                        <div class="filtro-body filtro-acciones-body">
+                            <button type="submit" class="btn-filtrar">
+                                Filtrar
+                            </button>
+                            <a th:href="@{/admin/dashboard(view='clientes')}" class="btn-limpiar-todo">
+                                Limpiar Todo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- BOTONES DE ACCIÓN Y CONTADOR -->
+            <div class="acciones-header">
+                <div class="acciones-left">
+                    <a th:href="@{/admin/dashboard(view='new_cliente')}" class="btn-nuevo">
+                        ➕ Registrar Nuevo Cliente
+                    </a>
+
+                    <!-- Botón para generar PDF con filtros actuales -->
+                    <a th:href="@{/admin/reportes/clientes(
+                    nombre=${filtroNombre},
+                    email=${filtroEmail},
+                    telefono=${filtroTelefono},
+                    estado=${filtroEstado}
+                )}" target="_blank" class="btn-success">
+                        📄 Descargar PDF
+                    </a>
+                </div>
+
+                <div class="contador-resultados">
+                    <span class="contador-label">Clientes encontrados:</span>
+                    <span class="contador-badge" th:text="${clientes.size()}">0</span>
+                </div>
+            </div>
+
+            <!-- TABLA DE CLIENTES -->
+            <div class="table-container">
+                <table class="crud-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${clientes == null or #lists.isEmpty(clientes)}">
+                            <td colspan="6" class="tabla-vacia">
+                                <i class="bi bi-inbox" style="font-size: 48px; color: #9ca3af;"></i>
+                                <p>No se encontraron clientes con los filtros aplicados</p>
+                            </td>
+                        </tr>
+                        <tr th:each="cliente : ${clientes}">
+                            <td th:text="${cliente.idCliente}">1</td>
+                            <td th:text="${cliente.nombre}">Juan Pérez</td>
+                            <td th:text="${cliente.email}">juan@gmail.com</td>
+                            <td th:text="${cliente.telefono}">3001234567</td>
+                            <td>
+                                <span class="badge-estado"
+                                    th:classappend="${cliente.estado == 'activo'} ? 'badge-activo' : 'badge-inactivo'"
+                                    th:text="${cliente.estado}">
+                                    activo
+                                </span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/dashboard(view='edit_cliente', id=${cliente.idCliente})}"
+                                    class="btn-accion btn-editar"> Editar</a>
+                                <a th:href="@{/admin/clientes/eliminar/{id}(id=${cliente.idCliente})}"
+                                    class="btn-accion btn-eliminar"
+                                    onclick="return confirm('¿Eliminar este cliente?');"> Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== FORMULARIO DE CLIENTE ========== -->
+        <div th:if="${currentView == 'new_cliente' or currentView == 'edit_cliente'}" class="form-view">
+            <div th:replace="~{admin/clientes/form :: clienteForm}"></div>
+        </div>
+
+        <!-- ========== VISTA DE VENTAS ========== -->
+        <div th:if="${currentView == 'ventas'}" class="list-view">
+            <h1>💰 Gestión de Ventas</h1>
+            <a th:href="@{/admin/dashboard(view='new_venta')}" class="btn-nuevo">➕ Registrar Nueva Venta</a>
+
+            <div class="table-container">
+                <table class="crud-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Método de Pago</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="venta : ${ventas}">
+                            <td th:text="${venta.idVenta}">1</td>
+                            <td th:text="${venta.cliente.nombre}">Cliente</td>
+                            <td th:text="${#dates.format(venta.fechaVenta, 'dd/MM/yyyy')}">01/01/2025</td>
+                            <td th:text="${#numbers.formatCurrency(venta.totalVenta)}">$100,000</td>
+                            <td th:text="${venta.estado}">pendiente</td>
+                            <td th:text="${venta.metodoPago}">Tarjeta</td>
+                            <td>
+                                <a th:href="@{/admin/dashboard(view='detalle_venta', id=${venta.idVenta})}"
+                                    class="btn-accion btn-ver">👁️ Ver Detalle</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${ventas == null or #lists.isEmpty(ventas)}">
+                            <td colspan="7" style="text-align: center;">No hay ventas registradas.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== VISTA DE REPORTES ========== -->
+        <div th:if="${currentView == 'reportes'}" class="summary-view">
+            <h1>📊 Reportes y Estadísticas</h1>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>📦 Total Productos</h3>
+                    <p th:text="${totalProductos != null ? totalProductos : '0'}">0</p>
+                </div>
+                <div class="card">
+                    <h3>👥 Total Clientes</h3>
+                    <p th:text="${totalClientes != null ? totalClientes : '0'}">0</p>
+                </div>
+                <div class="card">
+                    <h3>💰 Total Ventas</h3>
+                    <p th:text="${totalVentas != null ? totalVentas : '0'}">0</p>
+                </div>
+                <div class="card">
+                    <h3>💵 Ingresos Totales</h3>
+                    <p th:text="${ingresosTotales != null ? ingresosTotales : '$0'}">$0</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h2>📈 Más reportes próximamente...</h2>
+                <p>Aquí podrás ver gráficos de ventas, productos más vendidos, etc.</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

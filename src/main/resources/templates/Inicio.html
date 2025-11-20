@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio</title>
+  <link href="https://fonts.googleapis.com/css?family=Instrument+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/inicio.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    /* Estilos para el botón de admin */
+    .btn-admin {
+      margin-right: 10px;
+    }
+    /* Ocultar enlaces cuando el usuario está autenticado */
+    .auth-links {
+      display: flex;
+      gap: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="v188_236">
+    <div class="contenedor-centro">
+      <div class="v290_360">
+        <div class="icon-bar">
+          <div class="black-bar">
+            <!-- 🔥 BOTÓN DE ADMIN - Solo visible para ADMIN o ADMINISTRADOR -->
+            <a th:href="@{/admin/dashboard}" 
+               sec:authorize="hasAnyRole('ADMIN', 'ADMINISTRADOR')" 
+               class="btn-admin"
+               title="Panel de Control">
+              <i class="bi bi-clipboard-fill"></i> 
+            </a>
+            
+            <!-- 🔥 INFORMACIÓN DEL USUARIO - Solo si está autenticado -->
+            <span sec:authorize="isAuthenticated()" style="color: white; margin-right: 15px;">
+              Hola, <strong sec:authentication="principal.nombre"></strong>
+            </span>
+          </div>
+          
+          <label for="search-input">
+            <i class="fas fa-search"></i>
+          </label>
+          <input id="search-input" type="text" placeholder="Buscar..." style="display: none;">
+          
+          <a href="contactanos">
+            <i class="fas fa-user"></i>
+          </a>
+          
+          <div class="linea-blanca"></div>
+          <i class="fas fa-shopping-cart"></i>
+          <span class="v290_393">0</span>
+        </div>
+        <span class="v290_361">Envíos gratis desde $150.000</span>
+      </div>
+
+      <div class="v290_388"></div>
+      <a href="#" class="link-hombres">Hombres</a>
+      <a href="#" class="link-mujeres">Mujeres</a>
+      <a href="#" class="link-ninos">Niños</a>
+      <a href="#" class="link-otros">Otros</a>
+      
+      <!-- 🔥 MOSTRAR SOLO SI NO ESTÁ AUTENTICADO -->
+      <div class="auth-links" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/login}" class="link-login">Iniciar sesión</a>
+        <a th:href="@{/registro}" class="link-crear-cuenta">Crear una cuenta</a>
+      </div>
+      
+      <!-- 🔥 MOSTRAR SOLO SI ESTÁ AUTENTICADO -->
+      <div class="auth-links" sec:authorize="isAuthenticated()">
+        <!-- 🔥 CORRECCIÓN: Logout con formulario POST -->
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+          <button type="submit" class="cerrar-sesion">
+            Cerrar Sesión
+          </button>
+        </form>
+      </div>
+      
+      <div class="linea-vertical"></div>
+      <hr class="linea-decorativa">
+      <div class="v290_398"></div>
+      <div class="v290_399"></div>
+      <div class="v290_408"></div>
+      <div class="v290_402"></div>
+      <div class="v290_404"></div>
+      <div class="v290_400"></div>
+      <div class="v290_406"></div>
+      <span class="v290_410">Los estilos de verano finalmente están aquí</span>
+      <span class="v290_412">
+        La mayoría de nuestros productos son ediciones limitadas que no volverán.
+        Consigue tus artículos favoritos mientras estén disponibles.
+      </span>
+
+      <div class="v290_418">
+        <div class="v290_417">
+          <div class="v290_414"></div>
+          <span class="v290_415">Colección de la tienda</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const searchIcon = document.querySelector(".fa-search");
+    const searchInput = document.getElementById("search-input");
+
+    searchIcon.addEventListener("click", () => {
+      if (searchInput.style.display === "none" || searchInput.style.display === "") {
+        searchInput.style.display = "inline-block";
+        searchInput.focus();
+      } else {
+        searchInput.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>

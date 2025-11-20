@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="productForm" class="form-container">
+    
+    <h2 class="form-crud" th:text="${producto.id == null ? ' Crear Nuevo Producto' : ' Editar Producto: ' + producto.nombre}"></h2>
+
+    <form th:action="@{/admin/productos/guardar}" th:object="${producto}" method="post" class="crud-form">
+        
+        <input type="hidden" th:field="*{id}" /> 
+
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="precio">Precio:</label>
+            <input type="number" id="precio" th:field="*{precio}" step="any" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="stock">Cantidad en Stock:</label>
+            <input type="number" id="stock" th:field="*{stock}" step="1" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" th:field="*{descripcion}"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="foto">URL de la Foto:</label>
+            <input type="text" id="foto" th:field="*{foto}">
+        </div>
+
+        <div class="form-group">
+            <label for="estado">Estado:</label>
+            <select id="estado" th:field="*{estado}">
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-guardar" 
+                    th:text="${producto.id == null ? ' Guardar Producto' : ' Actualizar Producto'}">Guardar</button>
+            
+            <a th:href="@{/admin/dashboard(view='productos')}" class="btn-cancelar">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

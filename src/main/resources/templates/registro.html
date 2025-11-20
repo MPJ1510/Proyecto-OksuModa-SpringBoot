@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Registro | Crea tu cuenta</title>
+  <link href="https://fonts.googleapis.com/css?family=Instrument+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/registro.css}">
+</head>
+
+<body>
+  <div class="form-wrapper">
+    <!-- Logo superior izquierdo -->
+    <div class="logo-izquierda"></div>
+
+    <!-- Contenedor del formulario -->
+    <div class="form-container">
+      <h1 class="titulo-grande">¡Solo para muchas veces!</h1>
+
+      <div class="form-box">
+        <h2>Crea tu cuenta gratis</h2>
+
+        <form id="registro-form" method="post" th:action="@{/registro}" th:object="${usuario}" novalidate>
+
+          <!-- Campo nombre -->
+          <label for="nombre">Tu Nombre Completo</label>
+          <input type="text" id="nombre" placeholder="Ingresa tu nombre" th:field="*{nombre}" required>
+          <span class="error" id="nombre-error"></span>
+
+          <!-- Campo email -->
+          <label for="email">Tu correo electrónico</label>
+          <input type="email" id="email" placeholder="Ingresa tu correo" th:field="*{email}" required>
+          <span class="error" id="email-error"></span>
+
+          <!-- Campo contraseña -->
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" placeholder="Ingresa tu contraseña" th:field="*{contrasena}" required>
+          <span class="error" id="password-error"></span>
+
+          <!-- Confirmar contraseña -->
+          <label for="confirm-password">Confirmar Contraseña</label>
+          <input type="password" id="confirm-password" placeholder="Repite tu contraseña" required>
+          <span class="error" id="confirm-password-error"></span>
+
+          <!-- Checkbox términos -->
+          <div class="terminos-container">
+            <label class="terminos">
+              <input type="checkbox" id="terminos" required>
+              <span>Acepto los <a href="#" class="rojo">Términos y Condiciones</a></span>
+            </label>
+          </div>
+          <span class="error" id="terminos-error"></span>
+          <!-- Botón -->
+          <button type="submit" class="boton">Crear una cuenta</button>
+
+          <!-- Link a login -->
+          <a th:href="@{/login}" class="link">¿Ya tienes una cuenta?</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("registro-form").addEventListener("submit", function (e) {
+      // --- 1. Obtener referencias de campos y errores ---
+      const nombre = document.getElementById("nombre");
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      const confirmPassword = document.getElementById("confirm-password");
+      const terminos = document.getElementById("terminos");
+
+      const nombreError = document.getElementById("nombre-error");
+      const emailError = document.getElementById("email-error");
+      const passwordError = document.getElementById("password-error");
+      const confirmPasswordError = document.getElementById("confirm-password-error");
+      const terminosError = document.getElementById("terminos-error");
+
+      let valido = true;
+
+      // Limpiar mensajes de error previos
+      nombreError.textContent = "";
+      emailError.textContent = "";
+      passwordError.textContent = "";
+      confirmPasswordError.textContent = "";
+      terminosError.textContent = "";
+
+      // --- 2. VALIDACIÓN DE CAMPOS VACÍOS (Nombre y Email) ---
+
+      // El atributo 'required' del HTML ya maneja esto, pero es buena práctica validarlo.
+      // También puedes usar: if (!nombre.value.trim()) { ... }
+      if (!nombre.value) {
+        nombreError.textContent = "El nombre es obligatorio.";
+        valido = false;
+      }
+
+      if (!email.value) {
+        emailError.textContent = "El correo electrónico es obligatorio.";
+        valido = false;
+      } else if (!isValidEmail(email.value)) { // Opcional: Validación simple de formato de email
+        emailError.textContent = "El formato del correo electrónico no es válido.";
+        valido = false;
+      }
+
+      // --- 3. VALIDACIÓN DE CONTRASEÑAS Y COINCIDENCIA ---
+
+      if (!password.value) {
+        passwordError.textContent = "La contraseña es obligatoria.";
+        valido = false;
+      }
+
+      if (!confirmPassword.value) {
+        confirmPasswordError.textContent = "Debes confirmar la contraseña.";
+        valido = false;
+      }
+
+      // 3.1. Validar Coincidencia solo si ambas no están vacías
+      if (password.value && confirmPassword.value && password.value !== confirmPassword.value) {
+        confirmPasswordError.textContent = "Las contraseñas no coinciden.";
+        valido = false;
+      }
+
+      // --- 4. VALIDACIÓN DE TÉRMINOS Y CONDICIONES ---
+      if (!terminos.checked) {
+        terminosError.textContent = "Debes aceptar los Términos y Condiciones.";
+        valido = false;
+      }
+
+      // --- 5. Bloqueo de envío ---
+      if (!valido) {
+        e.preventDefault(); // Detiene el envío si se encontraron errores
+      }
+    });
+
+    // Función simple de validación de formato de email
+    function isValidEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+  </script>
+
+</body>
+
+</html>
