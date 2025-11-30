@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Hombres - Colección</title>
+  <link href="https://fonts.googleapis.com/css?family=Instrument+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/hombres.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="contenedor-principal">
+    <!-- Barra superior negra -->
+    <div class="barra-superior">
+      <div class="contenido-barra">
+        <div class="black-bar">
+          <a th:href="@{/admin/dashboard}" 
+             sec:authorize="hasAnyRole('ADMIN', 'ADMINISTRADOR')" 
+             class="btn-admin"
+             title="Panel de Control">
+            <i class="bi bi-clipboard-fill"></i> 
+          </a>
+          
+          <span sec:authorize="isAuthenticated()" class="usuario-info">
+            Hola, <strong sec:authentication="principal.nombre"></strong>
+          </span>
+        </div>
+        
+        <span class="texto-envio">Envíos gratis desde $150.000</span>
+        
+        <div class="icon-bar">
+          <label for="search-input">
+            <i class="fas fa-search"></i>
+          </label>
+          <input id="search-input" type="text" placeholder="Buscar..." style="display: none;">
+          
+          <a href="/contactanos">
+            <i class="fas fa-user"></i>
+          </a>
+          
+          <div class="linea-blanca"></div>
+          <i class="fas fa-shopping-cart"></i>
+          <span class="contador-carrito">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación principal -->
+    <div class="navegacion-principal">
+      <a th:href="@{/}" class="logo"></a>
+      
+      <nav class="menu-nav">
+        <a href="/hombres" class="link-nav active">Hombres</a>
+        <a href="/mujeres" class="link-nav">Mujeres</a>
+        <a href="/ninos" class="link-nav">Niños</a>
+        <a href="/otros" class="link-nav">Otros</a>
+      </nav>
+      
+      <div class="auth-section">
+        <div sec:authorize="!isAuthenticated()">
+          <a th:href="@{/login}" class="link-auth">Iniciar sesión</a>
+          <span class="separador-vertical"></span>
+          <a th:href="@{/registro}" class="link-auth">Crear una cuenta</a>
+        </div>
+        
+        <div sec:authorize="isAuthenticated()">
+          <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit" class="btn-cerrar-sesion">Cerrar Sesión</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <hr class="linea-separadora">
+
+    <!-- Banner hero -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-titulo">Colección para Hombres</h1>
+        <p class="hero-subtitulo">Descubre las últimas tendencias en moda masculina</p>
+      </div>
+    </section>
+
+    <!-- Filtros y ordenamiento -->
+    <section class="seccion-filtros">
+      <div class="contenedor-filtros">
+        <div class="grupo-filtros">
+          <button class="btn-filtro active">
+            <i class="fas fa-th"></i> Todos
+          </button>
+          <button class="btn-filtro">
+            <i class="fas fa-tshirt"></i> Camisetas
+          </button>
+          <button class="btn-filtro">
+            <i class="fas fa-vest"></i> Chaquetas
+          </button>
+          <button class="btn-filtro">
+            <i class="fas fa-socks"></i> Pantalones
+          </button>
+          <button class="btn-filtro">
+            <i class="fas fa-shoe-prints"></i> Calzado
+          </button>
+          <button class="btn-filtro">
+            <i class="fas fa-plus-circle"></i> Accesorios
+          </button>
+        </div>
+        
+        <div class="ordenamiento">
+          <label for="orden">Ordenar por:</label>
+          <select id="orden" class="select-orden">
+            <option value="reciente">Más reciente</option>
+            <option value="precio-asc">Precio: Menor a Mayor</option>
+            <option value="precio-desc">Precio: Mayor a Menor</option>
+            <option value="popular">Más popular</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid de productos -->
+    <section class="seccion-productos">
+      <div class="grid-productos">
+        <!-- Producto 1 -->
+        <div class="tarjeta-producto">
+          <div class="imagen-producto">
+            <span class="etiqueta-nuevo">NUEVO</span>
+            <img src="/imágenes/producto-hombre-1.jpg" alt="Producto" class="img-principal">
+            <img src="/imágenes/producto-hombre-1-hover.jpg" alt="Producto hover" class="img-hover">
+            <div class="acciones-rapidas">
+              <button class="btn-accion" title="Ver detalles">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-accion" title="Agregar al carrito">
+                <i class="fas fa-shopping-bag"></i>
+              </button>
+              <button class="btn-accion" title="Favorito">
+                <i class="far fa-heart"></i>
+              </button>
+            </div>
+          </div>
+          <div class="info-producto">
+            <h3 class="nombre-producto">Camisa Casual Slim Fit</h3>
+            <p class="categoria-producto">Camisas</p>
+            <div class="precio-producto">
+              <span class="precio-actual">$89.900</span>
+            </div>
+            <div class="colores-disponibles">
+              <span class="color-muestra" style="background: #1a1a1a;"></span>
+              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;"></span>
+              <span class="color-muestra" style="background: #2c5aa0;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 2 -->
+        <div class="tarjeta-producto">
+          <div class="imagen-producto">
+            <span class="etiqueta-descuento">-30%</span>
+            <img src="/imágenes/producto-hombre-2.jpg" alt="Producto" class="img-principal">
+            <img src="/imágenes/producto-hombre-2-hover.jpg" alt="Producto hover" class="img-hover">
+            <div class="acciones-rapidas">
+              <button class="btn-accion" title="Ver detalles">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-accion" title="Agregar al carrito">
+                <i class="fas fa-shopping-bag"></i>
+              </button>
+              <button class="btn-accion" title="Favorito">
+                <i class="far fa-heart"></i>
+              </button>
+            </div>
+          </div>
+          <div class="info-producto">
+            <h3 class="nombre-producto">Jeans Regular Fit</h3>
+            <p class="categoria-producto">Pantalones</p>
+            <div class="precio-producto">
+              <span class="precio-anterior">$149.900</span>
+              <span class="precio-actual">$104.930</span>
+            </div>
+            <div class="colores-disponibles">
+              <span class="color-muestra" style="background: #1c3a57;"></span>
+              <span class="color-muestra" style="background: #2a2a2a;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 3 -->
+        <div class="tarjeta-producto">
+          <div class="imagen-producto">
+            <img src="/imágenes/producto-hombre-3.jpg" alt="Producto" class="img-principal">
+            <img src="/imágenes/producto-hombre-3-hover.jpg" alt="Producto hover" class="img-hover">
+            <div class="acciones-rapidas">
+              <button class="btn-accion" title="Ver detalles">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-accion" title="Agregar al carrito">
+                <i class="fas fa-shopping-bag"></i>
+              </button>
+              <button class="btn-accion" title="Favorito">
+                <i class="far fa-heart"></i>
+              </button>
+            </div>
+          </div>
+          <div class="info-producto">
+            <h3 class="nombre-producto">Chaqueta Bomber</h3>
+            <p class="categoria-producto">Chaquetas</p>
+            <div class="precio-producto">
+              <span class="precio-actual">$189.900</span>
+            </div>
+            <div class="colores-disponibles">
+              <span class="color-muestra" style="background: #1a1a1a;"></span>
+              <span class="color-muestra" style="background: #4a4a4a;"></span>
+              <span class="color-muestra" style="background: #8b4513;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 4 -->
+        <div class="tarjeta-producto">
+          <div class="imagen-producto">
+            <span class="etiqueta-nuevo">NUEVO</span>
+            <img src="/imágenes/producto-hombre-4.jpg" alt="Producto" class="img-principal">
+            <img src="/imágenes/producto-hombre-4-hover.jpg" alt="Producto hover" class="img-hover">
+            <div class="acciones-rapidas">
+              <button class="btn-accion" title="Ver detalles">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-accion" title="Agregar al carrito">
+                <i class="fas fa-shopping-bag"></i>
+              </button>
+              <button class="btn-accion" title="Favorito">
+                <i class="far fa-heart"></i>
+              </button>
+            </div>
+          </div>
+          <div class="info-producto">
+            <h3 class="nombre-producto">Polo Manga Corta</h3>
+            <p class="categoria-producto">Camisetas</p>
+            <div class="precio-producto">
+              <span class="precio-actual">$69.900</span>
+            </div>
+            <div class="colores-disponibles">
+              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;"></span>
+              <span class="color-muestra" style="background: #1a1a1a;"></span>
+              <span class="color-muestra" style="background: #c41e3a;"></span>
+              <span class="color-muestra" style="background: #003366;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Duplicar más productos según necesidad -->
+        <div class="tarjeta-producto">
+          <div class="imagen-producto">
+            <img src="/imágenes/producto-hombre-5.jpg" alt="Producto" class="img-principal">
+            <img src="/imágenes/producto-hombre-5-hover.jpg" alt="Producto hover" class="img-hover">
+            <div class="acciones-rapidas">
+              <button class="btn-accion" title="Ver detalles">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-accion" title="Agregar al carrito">
+                <i class="fas fa-shopping-bag"></i>
+              </button>
+              <button class="btn-accion" title="Favorito">
+                <i class="far fa-heart"></i>
+              </button>
+            </div>
+          </div>
+          <div class="info-producto">
+            <h3 class="nombre-producto">Zapatillas Deportivas</h3>
+            <p class="categoria-producto">Calzado</p>
+            <div class="precio-producto">
+              <span class="precio-actual">$229.900</span>
+            </div>
+            <div class="colores-disponibles">
+              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;"></span>
+              <span class="color-muestra" style="background: #1a1a1a;"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tarjeta-producto">
+          <div class="imagen-producto">
+            <span class="etiqueta-descuento">-20%</span>
+            <img src="/imágenes/producto-hombre-6.jpg" alt="Producto" class="img-principal">
+            <img src="/imágenes/producto-hombre-6-hover.jpg" alt="Producto hover" class="img-hover">
+            <div class="acciones-rapidas">
+              <button class="btn-accion" title="Ver detalles">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-accion" title="Agregar al carrito">
+                <i class="fas fa-shopping-bag"></i>
+              </button>
+              <button class="btn-accion" title="Favorito">
+                <i class="far fa-heart"></i>
+              </button>
+            </div>
+          </div>
+          <div class="info-producto">
+            <h3 class="nombre-producto">Sudadera con Capucha</h3>
+            <p class="categoria-producto">Sudaderas</p>
+            <div class="precio-producto">
+              <span class="precio-anterior">$119.900</span>
+              <span class="precio-actual">$95.920</span>
+            </div>
+            <div class="colores-disponibles">
+              <span class="color-muestra" style="background: #4a4a4a;"></span>
+              <span class="color-muestra" style="background: #1a1a1a;"></span>
+              <span class="color-muestra" style="background: #003d7a;"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Paginación -->
+    <div class="paginacion">
+      <button class="btn-paginacion" disabled>
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="btn-paginacion active">1</button>
+      <button class="btn-paginacion">2</button>
+      <button class="btn-paginacion">3</button>
+      <button class="btn-paginacion">...</button>
+      <button class="btn-paginacion">10</button>
+      <button class="btn-paginacion">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="contenido-footer">
+        <div class="columna-footer">
+          <h4>Acerca de</h4>
+          <ul>
+            <li><a href="#">Nuestra historia</a></li>
+            <li><a href="#">Trabaja con nosotros</a></li>
+            <li><a href="#">Sostenibilidad</a></li>
+          </ul>
+        </div>
+        <div class="columna-footer">
+          <h4>Ayuda</h4>
+          <ul>
+            <li><a href="#">Envíos</a></li>
+            <li><a href="#">Devoluciones</a></li>
+            <li><a href="#">Guía de tallas</a></li>
+          </ul>
+        </div>
+        <div class="columna-footer">
+          <h4>Síguenos</h4>
+          <div class="redes-sociales">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 Tu Tienda. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Toggle búsqueda
+    const searchIcon = document.querySelector(".fa-search");
+    const searchInput = document.getElementById("search-input");
+
+    searchIcon.addEventListener("click", () => {
+      if (searchInput.style.display === "none" || searchInput.style.display === "") {
+        searchInput.style.display = "inline-block";
+        searchInput.focus();
+      } else {
+        searchInput.style.display = "none";
+      }
+    });
+
+    // Animación hover en tarjetas
+    document.querySelectorAll('.tarjeta-producto').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
+  </script>
+</body>
+</html>

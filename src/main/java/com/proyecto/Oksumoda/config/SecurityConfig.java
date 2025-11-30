@@ -34,7 +34,7 @@ public class SecurityConfig {
             .authorizeHttpRequests((requests) -> requests
                 // Recursos públicos (accesibles sin autenticación)
                 .requestMatchers("/", "/registro", "/login", "/contactanos", "/404", "/403",
-                                "/css/**", "/js/**", "/imágenes/**", "/images/**").permitAll()
+                                "/css/**","/hombres","/mujeres","/ninos","/otros", "/js/**", "/imágenes/**", "/images/**").permitAll()
                 
                 //  Panel de administración - Acepta ADMIN, ADMINISTRADOR
                 .requestMatchers("/admin/**").hasAnyRole("ADMIN", "ADMINISTRADOR")

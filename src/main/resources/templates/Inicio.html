@@ -46,7 +46,7 @@
           </label>
           <input id="search-input" type="text" placeholder="Buscar..." style="display: none;">
           
-          <a href="contactanos">
+          <a th:href="@{/contactanos}">
             <i class="fas fa-user"></i>
           </a>
           
@@ -58,10 +58,12 @@
       </div>
 
       <div class="v290_388"></div>
-      <a href="#" class="link-hombres">Hombres</a>
-      <a href="#" class="link-mujeres">Mujeres</a>
-      <a href="#" class="link-ninos">Niños</a>
-      <a href="#" class="link-otros">Otros</a>
+      
+      <!-- 🔥 ENLACES CORREGIDOS CON THYMELEAF -->
+      <a th:href="@{/hombres}" class="link-hombres">Hombres</a>
+      <a th:href="@{/mujeres}" class="link-mujeres">Mujeres</a>
+      <a th:href="@{/ninos}" class="link-ninos">Niños</a>
+      <a th:href="@{/otros}" class="link-otros">Otros</a>
       
       <!-- 🔥 MOSTRAR SOLO SI NO ESTÁ AUTENTICADO -->
       <div class="auth-links" sec:authorize="!isAuthenticated()">

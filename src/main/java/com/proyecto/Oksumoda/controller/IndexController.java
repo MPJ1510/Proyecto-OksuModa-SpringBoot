@@ -29,4 +29,24 @@ public class IndexController {
     public String contactanos() {
         return "contactanos";
     }
+
+    @GetMapping("/hombres")
+    public String hombres() {
+        return "hombres";
+    }
+
+    @GetMapping("/mujeres")
+    public String mujeres() {
+        return "mujeres";
+    }
+
+        @GetMapping("/ninos")
+    public String ninos() {
+        return "ninos";
+    }
+
+        @GetMapping("/otros")
+    public String otros() {
+        return "otros";
+    }
 }
