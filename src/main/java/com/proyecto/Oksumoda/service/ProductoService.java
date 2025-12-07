@@ -19,32 +19,30 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
+    // 🔥 MÉTODO NUEVO: Buscar por categoría
+    public List<Producto> findByCategoria(String categoria) {
+        return productoRepository.findByCategoria(categoria);
+    }
+
+    // 🔥 MÉTODO NUEVO: Buscar por categoría y estado
+    public List<Producto> findByCategoriaAndEstado(String categoria, String estado) {
+        return productoRepository.findByCategoriaAndEstado(categoria, estado);
+    }
+
     /**
-     * Filtra productos según criterios opcionales: nombre, estado, rango de precio y stock mínimo.
-     * 
-     * @param nombre nombre del producto a filtrar (opcional)
-     * @param estado estado del producto a filtrar (opcional)
-     * @param precioMin precio mínimo del producto (opcional)
-     * @param precioMax precio máximo del producto (opcional)
-     * @param stockMin stock mínimo del producto (opcional)
-     * @return lista de productos que cumplen con los criterios de búsqueda
+     * Filtra productos según criterios opcionales
      */
     public List<Producto> filtrarProductos(String nombre, String estado, BigDecimal precioMin, 
                                           BigDecimal precioMax, Integer stockMin) {
         List<Producto> todos = productoRepository.findAll();
 
         return todos.stream()
-            // Filtro por nombre
             .filter(p -> nombre == null || nombre.trim().isEmpty() ||
                     p.getNombre().toLowerCase().contains(nombre.toLowerCase()))
-            // Filtro por estado
             .filter(p -> estado == null || estado.trim().isEmpty() ||
                     p.getEstado().equalsIgnoreCase(estado))
-            // Filtro por precio mínimo
             .filter(p -> precioMin == null || p.getPrecio().compareTo(precioMin) >= 0)
-            // Filtro por precio máximo
             .filter(p -> precioMax == null || p.getPrecio().compareTo(precioMax) <= 0)
-            // Filtro por stock mínimo
             .filter(p -> stockMin == null || p.getStock() >= stockMin)
             .collect(Collectors.toList());
     }

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito de Compras</title>
+  <link href="https://fonts.googleapis.com/css?family=Instrument+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/carrito.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="contenedor-principal">
+    <!-- Barra superior negra -->
+    <div class="barra-superior">
+      <div class="contenido-barra">
+        <div class="black-bar">
+          <a th:href="@{/admin/dashboard}" 
+             sec:authorize="hasAnyRole('ADMIN', 'ADMINISTRADOR')" 
+             class="btn-admin"
+             title="Panel de Control">
+            <i class="bi bi-clipboard-fill"></i> 
+          </a>
+          
+          <span sec:authorize="isAuthenticated()" class="usuario-info">
+            Hola, <strong sec:authentication="principal.nombre"></strong>
+          </span>
+        </div>
+        
+        <span class="texto-envio">Envíos gratis desde $150.000</span>
+        
+        <div class="icon-bar">
+          <label for="search-input">
+            <i class="fas fa-search"></i>
+          </label>
+          <input id="search-input" type="text" placeholder="Buscar..." style="display: none;">
+          
+          <a th:href="@{/contactanos}">
+            <i class="fas fa-user"></i>
+          </a>
+          
+          <div class="linea-blanca"></div>
+          <a th:href="@{/carrito}">
+            <i class="fas fa-shopping-cart"></i>
+          </a>
+          <span class="contador-carrito" th:text="${cantidadItems}">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación principal -->
+    <div class="navegacion-principal">
+      <a th:href="@{/}" class="logo"></a>
+      
+      <nav class="menu-nav">
+        <a th:href="@{/hombres}" class="link-nav">Hombres</a>
+        <a th:href="@{/mujeres}" class="link-nav">Mujeres</a>
+        <a th:href="@{/ninos}" class="link-nav">Niños</a>
+        <a th:href="@{/otros}" class="link-nav">Otros</a>
+      </nav>
+      
+      <div class="auth-section">
+        <div sec:authorize="!isAuthenticated()">
+          <a th:href="@{/login}" class="link-auth">Iniciar sesión</a>
+          <span class="separador-vertical"></span>
+          <a th:href="@{/registro}" class="link-auth">Crear una cuenta</a>
+        </div>
+        
+        <div sec:authorize="isAuthenticated()">
+          <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit" class="btn-cerrar-sesion">Cerrar Sesión</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <hr class="linea-separadora">
+
+    <!-- Contenido del Carrito -->
+    <section class="seccion-carrito">
+      <div class="contenedor-carrito">
+        <h1 class="titulo-carrito">
+          <i class="fas fa-shopping-cart"></i> Mi Carrito de Compras
+        </h1>
+        
+        <!-- Carrito Vacío -->
+        <div th:if="${items.isEmpty()}" class="carrito-vacio">
+          <i class="fas fa-shopping-bag"></i>
+          <h2>Tu carrito está vacío</h2>
+          <p>¡Agrega productos para comenzar a comprar!</p>
+          <a th:href="@{/}" class="btn-seguir-comprando">
+            <i class="fas fa-arrow-left"></i> Ir a la tienda
+          </a>
+        </div>
+        
+        <!-- Carrito con productos -->
+        <div th:unless="${items.isEmpty()}" class="carrito-contenido">
+          <div class="items-container">
+            <!-- Item del carrito -->
+            <div th:each="item : ${items}" class="carrito-item">
+              <div class="item-imagen">
+                <img th:src="@{${item.imagen}}" th:alt="${item.nombre}">
+              </div>
+              
+              <div class="item-info">
+                <h3 th:text="${item.nombre}">Nombre del Producto</h3>
+                <p class="item-detalles">
+                  <span th:if="${item.talla}" class="detalle">
+                    Talla: <strong th:text="${item.talla}">M</strong>
+                  </span>
+                  <span th:if="${item.color}" class="detalle">
+                    Color: <strong th:text="${item.color}">Negro</strong>
+                  </span>
+                </p>
+                <p class="item-precio">
+                  $<span th:text="${#numbers.formatDecimal(item.precio, 0, 'COMMA', 0, 'POINT')}">0</span>
+                </p>
+              </div>
+              
+              <div class="item-cantidad">
+                <button class="btn-cantidad" th:onclick="'actualizarCantidad(' + ${item.productoId} + ', ' + ${item.cantidad - 1} + ')'">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <input type="number" 
+                       class="input-cantidad" 
+                       th:value="${item.cantidad}" 
+                       min="1" 
+                       readonly>
+                <button class="btn-cantidad" th:onclick="'actualizarCantidad(' + ${item.productoId} + ', ' + ${item.cantidad + 1} + ')'">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              
+              <div class="item-subtotal">
+                <p class="subtotal-label">Subtotal</p>
+                <p class="subtotal-valor">
+                  $<span th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')}">0</span>
+                </p>
+              </div>
+              
+              <button class="btn-eliminar" th:onclick="'eliminarProducto(' + ${item.productoId} + ')'">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Resumen del carrito -->
+          <div class="resumen-carrito">
+            <h2>Resumen del Pedido</h2>
+            
+            <div class="resumen-linea">
+              <span>Subtotal</span>
+              <span>$<span th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 0, 'POINT')}">0</span></span>
+            </div>
+            
+            <div class="resumen-linea">
+              <span>Envío</span>
+              <span th:if="${total >= 150000}" class="envio-gratis">¡GRATIS!</span>
+              <span th:unless="${total >= 150000}">$10.000</span>
+            </div>
+            
+            <div th:if="${total < 150000}" class="mensaje-envio-gratis">
+              <i class="fas fa-truck"></i>
+              Te faltan $<span th:text="${#numbers.formatDecimal(150000 - total, 0, 'COMMA', 0, 'POINT')}">0</span> para envío gratis
+            </div>
+            
+            <hr>
+            
+            <div class="resumen-total">
+              <span>Total</span>
+              <span class="total-valor">
+                $<span th:text="${#numbers.formatDecimal(total + (total >= 150000 ? 0 : 10000), 0, 'COMMA', 0, 'POINT')}">0</span>
+              </span>
+            </div>
+            
+            <div class="resumen-acciones">
+              <a th:href="@{/carrito/checkout}" class="btn-checkout">
+                <i class="fas fa-lock"></i> Proceder al Pago
+              </a>
+              <a th:href="@{/}" class="btn-seguir-comprando-small">
+                <i class="fas fa-arrow-left"></i> Seguir comprando
+              </a>
+              <button onclick="vaciarCarrito()" class="btn-vaciar">
+                <i class="fas fa-trash-alt"></i> Vaciar carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="contenido-footer">
+        <div class="columna-footer">
+          <h4>Acerca de</h4>
+          <ul>
+            <li><a href="#">Nuestra historia</a></li>
+            <li><a href="#">Trabaja con nosotros</a></li>
+          </ul>
+        </div>
+        <div class="columna-footer">
+          <h4>Ayuda</h4>
+          <ul>
+            <li><a href="#">Envíos</a></li>
+            <li><a href="#">Devoluciones</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Actualizar cantidad
+    function actualizarCantidad(productoId, cantidad) {
+      if (cantidad < 1) return;
+      
+      fetch(`/carrito/actualizar/${productoId}?cantidad=${cantidad}`, {
+        method: 'POST'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    // Eliminar producto
+    function eliminarProducto(productoId) {
+      if (confirm('¿Estás seguro de eliminar este producto?')) {
+        fetch(`/carrito/eliminar/${productoId}`, {
+          method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      }
+    }
+
+    // Vaciar carrito
+    function vaciarCarrito() {
+      if (confirm('¿Estás seguro de vaciar el carrito?')) {
+        fetch('/carrito/vaciar', {
+          method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      }
+    }
+  </script>
+</body>
+</html>

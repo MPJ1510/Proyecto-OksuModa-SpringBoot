@@ -51,8 +51,10 @@
           </a>
           
           <div class="linea-blanca"></div>
-          <i class="fas fa-shopping-cart"></i>
-          <span class="v290_393">0</span>
+          <a th:href="@{/carrito}" style="color: white; cursor: pointer;">
+  <i class="fas fa-shopping-cart"></i>
+</a>
+<span class="v290_393" id="contador-carrito">0</span>
         </div>
         <span class="v290_361">Envíos gratis desde $150.000</span>
       </div>
@@ -107,16 +109,30 @@
 
   <script>
     const searchIcon = document.querySelector(".fa-search");
-    const searchInput = document.getElementById("search-input");
+  const searchInput = document.getElementById("search-input");
 
-    searchIcon.addEventListener("click", () => {
-      if (searchInput.style.display === "none" || searchInput.style.display === "") {
-        searchInput.style.display = "inline-block";
-        searchInput.focus();
-      } else {
-        searchInput.style.display = "none";
-      }
-    });
+  searchIcon.addEventListener("click", () => {
+    if (searchInput.style.display === "none" || searchInput.style.display === "") {
+      searchInput.style.display = "inline-block";
+      searchInput.focus();
+    } else {
+      searchInput.style.display = "none";
+    }
+  });
+
+  // 🔥 NUEVO: Actualizar contador del carrito al cargar la página
+  window.addEventListener('DOMContentLoaded', function() {
+    actualizarContadorCarrito();
+  });
+
+  function actualizarContadorCarrito() {
+    fetch('/carrito/cantidad')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('contador-carrito').textContent = data.cantidadItems || 0;
+      })
+      .catch(error => console.error('Error:', error));
+  }
   </script>
 </body>
 </html>

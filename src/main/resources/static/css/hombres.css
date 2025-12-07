@@ -71,8 +71,7 @@ html, body {
   gap: 1.2vw;
 }
 
-.icon-bar i,
-.contador-carrito {
+.icon-bar i {
   color: white;
   font-size: 1.4vw;
   cursor: pointer;
@@ -82,6 +81,31 @@ html, body {
   width: 1px;
   height: 1.5vw;
   background-color: white;
+}
+
+/* Carrito con contador */
+.carrito-link {
+  position: relative;
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+}
+
+.contador-carrito {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #EB0029;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: none; /* Oculto por defecto, se muestra cuando hay items */
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  font-family: 'Instrument Sans', sans-serif;
 }
 
 #search-input {
@@ -173,6 +197,7 @@ html, body {
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s;
+  font-family: 'Instrument Sans', sans-serif;
 }
 
 .btn-cerrar-sesion:hover {
@@ -251,6 +276,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-family: 'Instrument Sans', sans-serif;
 }
 
 .btn-filtro:hover {
@@ -475,6 +501,7 @@ html, body {
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s;
+  font-family: 'Instrument Sans', sans-serif;
 }
 
 .btn-paginacion:hover:not(:disabled) {
@@ -561,6 +588,31 @@ html, body {
   padding-top: 30px;
   border-top: 1px solid #333;
   color: #999;
+}
+
+/* ========================================== */
+/* ANIMACIONES PARA NOTIFICACIONES */
+/* ========================================== */
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
 }
 
 /* Responsive */

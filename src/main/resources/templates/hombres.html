@@ -41,8 +41,12 @@
           </a>
           
           <div class="linea-blanca"></div>
-          <i class="fas fa-shopping-cart"></i>
-          <span class="contador-carrito">0</span>
+          
+          <!-- Icono del carrito con contador -->
+          <a href="/carrito" class="carrito-link">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="contador-carrito">0</span>
+          </a>
         </div>
       </div>
     </div>
@@ -122,8 +126,8 @@
     <!-- Grid de productos -->
     <section class="seccion-productos">
       <div class="grid-productos">
-        <!-- Producto 1 -->
-        <div class="tarjeta-producto">
+        <!-- Producto 1 - IMPORTANTE: data-producto-id debe coincidir con el ID real en tu BD -->
+        <div class="tarjeta-producto" data-producto-id="1">
           <div class="imagen-producto">
             <span class="etiqueta-nuevo">NUEVO</span>
             <img src="/imágenes/producto-hombre-1.jpg" alt="Producto" class="img-principal">
@@ -132,7 +136,7 @@
               <button class="btn-accion" title="Ver detalles">
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn-accion" title="Agregar al carrito">
+              <button class="btn-accion btn-agregar-carrito" title="Agregar al carrito">
                 <i class="fas fa-shopping-bag"></i>
               </button>
               <button class="btn-accion" title="Favorito">
@@ -147,15 +151,15 @@
               <span class="precio-actual">$89.900</span>
             </div>
             <div class="colores-disponibles">
-              <span class="color-muestra" style="background: #1a1a1a;"></span>
-              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;"></span>
-              <span class="color-muestra" style="background: #2c5aa0;"></span>
+              <span class="color-muestra" style="background: #1a1a1a;" data-color="Negro"></span>
+              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;" data-color="Blanco"></span>
+              <span class="color-muestra" style="background: #2c5aa0;" data-color="Azul"></span>
             </div>
           </div>
         </div>
 
         <!-- Producto 2 -->
-        <div class="tarjeta-producto">
+        <div class="tarjeta-producto" data-producto-id="2">
           <div class="imagen-producto">
             <span class="etiqueta-descuento">-30%</span>
             <img src="/imágenes/producto-hombre-2.jpg" alt="Producto" class="img-principal">
@@ -164,7 +168,7 @@
               <button class="btn-accion" title="Ver detalles">
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn-accion" title="Agregar al carrito">
+              <button class="btn-accion btn-agregar-carrito" title="Agregar al carrito">
                 <i class="fas fa-shopping-bag"></i>
               </button>
               <button class="btn-accion" title="Favorito">
@@ -180,14 +184,14 @@
               <span class="precio-actual">$104.930</span>
             </div>
             <div class="colores-disponibles">
-              <span class="color-muestra" style="background: #1c3a57;"></span>
-              <span class="color-muestra" style="background: #2a2a2a;"></span>
+              <span class="color-muestra" style="background: #1c3a57;" data-color="Azul Oscuro"></span>
+              <span class="color-muestra" style="background: #2a2a2a;" data-color="Negro"></span>
             </div>
           </div>
         </div>
 
         <!-- Producto 3 -->
-        <div class="tarjeta-producto">
+        <div class="tarjeta-producto" data-producto-id="3">
           <div class="imagen-producto">
             <img src="/imágenes/producto-hombre-3.jpg" alt="Producto" class="img-principal">
             <img src="/imágenes/producto-hombre-3-hover.jpg" alt="Producto hover" class="img-hover">
@@ -195,7 +199,7 @@
               <button class="btn-accion" title="Ver detalles">
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn-accion" title="Agregar al carrito">
+              <button class="btn-accion btn-agregar-carrito" title="Agregar al carrito">
                 <i class="fas fa-shopping-bag"></i>
               </button>
               <button class="btn-accion" title="Favorito">
@@ -210,15 +214,15 @@
               <span class="precio-actual">$189.900</span>
             </div>
             <div class="colores-disponibles">
-              <span class="color-muestra" style="background: #1a1a1a;"></span>
-              <span class="color-muestra" style="background: #4a4a4a;"></span>
-              <span class="color-muestra" style="background: #8b4513;"></span>
+              <span class="color-muestra" style="background: #1a1a1a;" data-color="Negro"></span>
+              <span class="color-muestra" style="background: #4a4a4a;" data-color="Gris"></span>
+              <span class="color-muestra" style="background: #8b4513;" data-color="Café"></span>
             </div>
           </div>
         </div>
 
         <!-- Producto 4 -->
-        <div class="tarjeta-producto">
+        <div class="tarjeta-producto" data-producto-id="4">
           <div class="imagen-producto">
             <span class="etiqueta-nuevo">NUEVO</span>
             <img src="/imágenes/producto-hombre-4.jpg" alt="Producto" class="img-principal">
@@ -227,7 +231,7 @@
               <button class="btn-accion" title="Ver detalles">
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn-accion" title="Agregar al carrito">
+              <button class="btn-accion btn-agregar-carrito" title="Agregar al carrito">
                 <i class="fas fa-shopping-bag"></i>
               </button>
               <button class="btn-accion" title="Favorito">
@@ -242,16 +246,16 @@
               <span class="precio-actual">$69.900</span>
             </div>
             <div class="colores-disponibles">
-              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;"></span>
-              <span class="color-muestra" style="background: #1a1a1a;"></span>
-              <span class="color-muestra" style="background: #c41e3a;"></span>
-              <span class="color-muestra" style="background: #003366;"></span>
+              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;" data-color="Blanco"></span>
+              <span class="color-muestra" style="background: #1a1a1a;" data-color="Negro"></span>
+              <span class="color-muestra" style="background: #c41e3a;" data-color="Rojo"></span>
+              <span class="color-muestra" style="background: #003366;" data-color="Azul Marino"></span>
             </div>
           </div>
         </div>
 
-        <!-- Duplicar más productos según necesidad -->
-        <div class="tarjeta-producto">
+        <!-- Producto 5 -->
+        <div class="tarjeta-producto" data-producto-id="5">
           <div class="imagen-producto">
             <img src="/imágenes/producto-hombre-5.jpg" alt="Producto" class="img-principal">
             <img src="/imágenes/producto-hombre-5-hover.jpg" alt="Producto hover" class="img-hover">
@@ -259,7 +263,7 @@
               <button class="btn-accion" title="Ver detalles">
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn-accion" title="Agregar al carrito">
+              <button class="btn-accion btn-agregar-carrito" title="Agregar al carrito">
                 <i class="fas fa-shopping-bag"></i>
               </button>
               <button class="btn-accion" title="Favorito">
@@ -274,13 +278,14 @@
               <span class="precio-actual">$229.900</span>
             </div>
             <div class="colores-disponibles">
-              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;"></span>
-              <span class="color-muestra" style="background: #1a1a1a;"></span>
+              <span class="color-muestra" style="background: #ffffff; border: 1px solid #ddd;" data-color="Blanco"></span>
+              <span class="color-muestra" style="background: #1a1a1a;" data-color="Negro"></span>
             </div>
           </div>
         </div>
 
-        <div class="tarjeta-producto">
+        <!-- Producto 6 -->
+        <div class="tarjeta-producto" data-producto-id="6">
           <div class="imagen-producto">
             <span class="etiqueta-descuento">-20%</span>
             <img src="/imágenes/producto-hombre-6.jpg" alt="Producto" class="img-principal">
@@ -289,7 +294,7 @@
               <button class="btn-accion" title="Ver detalles">
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn-accion" title="Agregar al carrito">
+              <button class="btn-accion btn-agregar-carrito" title="Agregar al carrito">
                 <i class="fas fa-shopping-bag"></i>
               </button>
               <button class="btn-accion" title="Favorito">
@@ -305,9 +310,9 @@
               <span class="precio-actual">$95.920</span>
             </div>
             <div class="colores-disponibles">
-              <span class="color-muestra" style="background: #4a4a4a;"></span>
-              <span class="color-muestra" style="background: #1a1a1a;"></span>
-              <span class="color-muestra" style="background: #003d7a;"></span>
+              <span class="color-muestra" style="background: #4a4a4a;" data-color="Gris"></span>
+              <span class="color-muestra" style="background: #1a1a1a;" data-color="Negro"></span>
+              <span class="color-muestra" style="background: #003d7a;" data-color="Azul"></span>
             </div>
           </div>
         </div>
@@ -363,30 +368,223 @@
     </footer>
   </div>
 
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT PARA EL CARRITO DE COMPRAS -->
+  <!-- ========================================== -->
   <script>
-    // Toggle búsqueda
-    const searchIcon = document.querySelector(".fa-search");
-    const searchInput = document.getElementById("search-input");
-
-    searchIcon.addEventListener("click", () => {
-      if (searchInput.style.display === "none" || searchInput.style.display === "") {
-        searchInput.style.display = "inline-block";
-        searchInput.focus();
-      } else {
-        searchInput.style.display = "none";
-      }
-    });
-
-    // Animación hover en tarjetas
-    document.querySelectorAll('.tarjeta-producto').forEach(card => {
-      card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-5px)';
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // Actualizar contador del carrito al cargar la página
+      actualizarContadorCarrito();
+      
+      // ==========================================
+      // AGREGAR AL CARRITO
+      // ==========================================
+      document.querySelectorAll('.btn-agregar-carrito').forEach(boton => {
+        boton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Obtener la tarjeta del producto
+          const tarjeta = this.closest('.tarjeta-producto');
+          
+          // Obtener el ID del producto (desde data-producto-id)
+          const productoId = tarjeta.dataset.productoId;
+          const nombre = tarjeta.querySelector('.nombre-producto').textContent.trim();
+          
+          console.log('🛒 Agregando al carrito - Producto ID:', productoId, '- Nombre:', nombre);
+          
+          // Llamar función para agregar al carrito
+          agregarAlCarrito(productoId, 1, null, null);
+        });
       });
       
-      card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
+      // ==========================================
+      // VER DETALLES
+      // ==========================================
+      document.querySelectorAll('.btn-accion[title="Ver detalles"]').forEach(boton => {
+        boton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const tarjeta = this.closest('.tarjeta-producto');
+          const nombre = tarjeta.querySelector('.nombre-producto').textContent.trim();
+          
+          alert('Ver detalles de: ' + nombre);
+        });
+      });
+      
+      // ==========================================
+      // FAVORITOS
+      // ==========================================
+      document.querySelectorAll('.btn-accion[title="Favorito"]').forEach(boton => {
+        boton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const icono = this.querySelector('i');
+          
+          if (icono.classList.contains('far')) {
+            icono.classList.remove('far');
+            icono.classList.add('fas');
+            this.style.color = '#EB0029';
+            mostrarNotificacion('Agregado a favoritos ❤️', 'success');
+          } else {
+            icono.classList.remove('fas');
+            icono.classList.add('far');
+            this.style.color = '';
+            mostrarNotificacion('Eliminado de favoritos', 'info');
+          }
+        });
+      });
+      
+      // ==========================================
+      // BÚSQUEDA
+      // ==========================================
+      const searchIcon = document.querySelector(".fa-search");
+      const searchInput = document.getElementById("search-input");
+      
+      if (searchIcon && searchInput) {
+        searchIcon.addEventListener("click", () => {
+          if (searchInput.style.display === "none" || searchInput.style.display === "") {
+            searchInput.style.display = "inline-block";
+            searchInput.focus();
+          } else {
+            searchInput.style.display = "none";
+          }
+        });
+      }
+      
+      // ==========================================
+      // ANIMACIONES DE TARJETAS
+      // ==========================================
+      document.querySelectorAll('.tarjeta-producto').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
       });
     });
+    
+    // ==========================================
+    // FUNCIÓN: AGREGAR AL CARRITO
+    // ==========================================
+    function agregarAlCarrito(productoId, cantidad = 1, talla = null, color = null) {
+      // Crear FormData
+      const formData = new FormData();
+      formData.append('productoId', productoId);
+      formData.append('cantidad', cantidad);
+      if (talla) formData.append('talla', talla);
+      if (color) formData.append('color', color);
+      
+      console.log('📤 Enviando al servidor:', {productoId, cantidad, talla, color});
+      
+      // Mostrar notificación de cargando
+      mostrarNotificacion('Agregando al carrito...', 'info');
+      
+      // Hacer petición AJAX
+      fetch('/carrito/agregar', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('✅ Respuesta del servidor:', data);
+        
+        if (data.success) {
+          mostrarNotificacion('¡Producto agregado al carrito! 🛒', 'success');
+          actualizarContadorCarrito();
+          animarIconoCarrito();
+        } else {
+          mostrarNotificacion(data.message || 'Error al agregar al carrito', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('❌ Error:', error);
+        mostrarNotificacion('Error de conexión. Intenta de nuevo.', 'error');
+      });
+    }
+    
+    // ==========================================
+    // FUNCIÓN: ACTUALIZAR CONTADOR CARRITO
+    // ==========================================
+    function actualizarContadorCarrito() {
+      fetch('/carrito/cantidad')
+        .then(response => response.json())
+        .then(data => {
+          const contador = document.querySelector('.contador-carrito');
+          if (contador) {
+            const cantidad = data.cantidadItems || 0;
+            contador.textContent = cantidad;
+            
+            if (cantidad > 0) {
+              contador.style.display = 'flex';
+            } else {
+              contador.style.display = 'none';
+            }
+          }
+        })
+        .catch(error => console.error('Error al actualizar contador:', error));
+    }
+    
+    // ==========================================
+    // FUNCIÓN: ANIMAR ICONO CARRITO
+    // ==========================================
+    function animarIconoCarrito() {
+      const iconoCarrito = document.querySelector('.fa-shopping-cart');
+      if (iconoCarrito) {
+        iconoCarrito.style.transition = 'transform 0.3s';
+        iconoCarrito.style.transform = 'scale(1.3)';
+        
+        setTimeout(() => {
+          iconoCarrito.style.transform = 'scale(1)';
+        }, 300);
+      }
+    }
+    
+    // ==========================================
+    // FUNCIÓN: MOSTRAR NOTIFICACIÓN
+    // ==========================================
+    function mostrarNotificacion(mensaje, tipo = 'info') {
+      // Eliminar notificación anterior si existe
+      const notifAnterior = document.querySelector('.notificacion-toast');
+      if (notifAnterior) {
+        notifAnterior.remove();
+      }
+      
+      // Crear notificación
+      const notif = document.createElement('div');
+      notif.className = 'notificacion-toast ' + tipo;
+      notif.textContent = mensaje;
+      
+      // Estilos
+      const bgColor = tipo === 'success' ? '#00c853' : tipo === 'error' ? '#EB0029' : '#333';
+      notif.style.cssText = `
+        position: fixed;
+        top: 120px;
+        right: 20px;
+        background: ${bgColor};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        font-weight: 600;
+        font-size: 0.95rem;
+      `;
+      
+      document.body.appendChild(notif);
+      
+      // Auto-eliminar después de 3 segundos
+      setTimeout(() => {
+        notif.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notif.remove(), 300);
+      }, 3000);
+    }
   </script>
 </body>
 </html>

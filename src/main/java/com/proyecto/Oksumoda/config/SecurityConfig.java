@@ -34,15 +34,19 @@ public class SecurityConfig {
             .authorizeHttpRequests((requests) -> requests
                 // Recursos públicos (accesibles sin autenticación)
                 .requestMatchers("/", "/registro", "/login", "/contactanos", "/404", "/403",
-                                "/css/**","/hombres","/mujeres","/ninos","/otros", "/js/**", "/imágenes/**", "/images/**").permitAll()
+                                "/css/**", "/hombres", "/mujeres", "/ninos", "/otros", 
+                                "/js/**", "/imágenes/**", "/images/**").permitAll()
                 
-                //  Panel de administración - Acepta ADMIN, ADMINISTRADOR
+                // 🛒 CARRITO - Requiere autenticación (CLIENTE o ADMIN)
+                .requestMatchers("/carrito/**").hasAnyRole("CLIENTE", "ADMINISTRADOR", "ADMIN")
+                
+                // Panel de administración - Acepta ADMIN, ADMINISTRADOR
                 .requestMatchers("/admin/**").hasAnyRole("ADMIN", "ADMINISTRADOR")
                 
-                //  Perfil de usuario - Acepta CLIENTE y ADMINISTRADOR
+                // Perfil de usuario - Acepta CLIENTE y ADMINISTRADOR
                 .requestMatchers("/perfil/**").hasAnyRole("CLIENTE", "ADMINISTRADOR", "ADMIN")
                 
-                //  Cualquier otra petición requiere autenticación
+                // Cualquier otra petición requiere autenticación
                 .anyRequest().authenticated()
             )
             .formLogin((form) -> form
@@ -50,7 +54,7 @@ public class SecurityConfig {
                 .permitAll()
                 .successHandler((request, response, authentication) -> {
                     System.out.println("========================================");
-                    System.out.println(" LOGIN EXITOSO");
+                    System.out.println("✅ LOGIN EXITOSO");
                     System.out.println("Usuario: " + authentication.getName());
                     System.out.println("Roles/Authorities: " + authentication.getAuthorities());
                     
@@ -69,17 +73,17 @@ public class SecurityConfig {
                     
                     if (esAdmin) {
                         redirectUrl = "/";
-                        System.out.println(" Redirigiendo a: " + redirectUrl);
+                        System.out.println("🔑 Redirigiendo ADMIN a: " + redirectUrl);
                     } else if (esCliente) {
                         redirectUrl = "/";
-                        System.out.println(" Cliente redirigiendo a: " + redirectUrl);
+                        System.out.println("🛍️ Cliente redirigiendo a: " + redirectUrl);
                     }
                     
                     System.out.println("========================================");
                     response.sendRedirect(redirectUrl);
                 })
                 .failureHandler((request, response, exception) -> {
-                    System.out.println(" LOGIN FALLIDO");
+                    System.out.println("❌ LOGIN FALLIDO");
                     System.out.println("Error: " + exception.getMessage());
                     System.out.println("Tipo de error: " + exception.getClass().getName());
                     response.sendRedirect("/login?error");
@@ -92,6 +96,10 @@ public class SecurityConfig {
             )
             .exceptionHandling((exceptions) -> exceptions
                 .accessDeniedHandler(customAccessDeniedHandler)
+            )
+            // 🔥 IMPORTANTE: Deshabilitar CSRF para las rutas del carrito (AJAX)
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/carrito/**")
             );
 
         return http.build();
